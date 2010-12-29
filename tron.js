@@ -103,9 +103,6 @@
         this.target.appendChild(canvas);
         var context = canvas.getContext("2d");
 
-
-        window.canvas = canvas;
-        window.context = context;
         var game = this;
 
         document.onkeydown = function(event) {

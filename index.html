@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tron</title>
+    <style>
+      body {
+          margin: 3em;
+          background: black;
+          font-family: sans-serif;
+          font-weight: bold;
+          color: white;
+          text-align: center;
+      }
+      #grid {
+          margin: 0 auto;
+          width: 500px;
+          height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="grid"></div>
+    <p>
+        Spacebar to start/stop.<br> 
+        Blue navigation with W (up), D (right), S (down), and A (left).<br>
+        Red navigation with I (up), L (right), K (down), and J (left).
+    </p>
+    <script type="text/javascript" src="tron.js"></script>
+    <script type="text/javascript">
+      var blue = new tron.Cycle({
+          keys: ["W", "D", "S", "A"],
+          position: {x: 30, y: 150},
+          direction: tron.EAST,
+          style: "rgb(20,20,255)"
+      });
+      var red = new tron.Cycle({
+          keys: ["I", "L", "K", "J"],
+          position: {x: 470, y: 150},
+          direction: tron.WEST,
+          style: "rgb(255,20,20)"
+      });
+      var game = new tron.Game({
+          cycles: [blue, red],
+          target: document.getElementById("grid")
+      });
+    </script>
+  </body>
+</html>

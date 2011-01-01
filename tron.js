@@ -131,7 +131,7 @@
         function update() {
             var w = 7;
             var h = 7;
-            var cycle, x0, y0, x1, y1, rX, rY, rect, alpha;
+            var cycle, x0, y0, x1, y1, rect, alpha;
             var collisions = [];
             for (var i=0, ii=game.cycles.length; i<ii; ++i) {
                 cycle = game.cycles[i];
@@ -218,7 +218,7 @@
             context.clearRect(0, 0, canvas.width, canvas.height);
             update();
             crash = false;
-        }
+        };
         update();
     }
             

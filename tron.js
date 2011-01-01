@@ -37,11 +37,11 @@
         this.handlers = handlers;
     }
     Cycle.prototype = {
-        speed: 60, // units per second
+        speed: 50, // units per second
         direction: NORTH,
         position: null,
         updatePosition: function(interval) {
-            var distance = this.speed * (interval / 1000) / resolution;
+            var distance = Math.round(this.speed * (interval / 1000) / resolution);
             this.position.x += this.direction.x * distance;
             this.position.y += this.direction.y * distance;
             return this.position;
@@ -126,12 +126,12 @@
         };
 
         var timer;
-        var interval = 50;
+        var interval = 10;
 
         function update() {
             var w = 7;
             var h = 7;
-            var cycle, x0, y0, x1, y1, rect, alpha;
+            var cycle, x0, y0, x1, y1, minX, minY, dX, oX, dY, oY, rect, alpha;
             var collisions = [];
             for (var i=0, ii=game.cycles.length; i<ii; ++i) {
                 cycle = game.cycles[i];
@@ -140,36 +140,18 @@
                 cycle.updatePosition(interval);
                 x1 = cycle.position.x;
                 y1 = cycle.position.y;
-                if (x1 > x0) {
-                    rect = {
-                        x: x0 + (w / 2), 
-                        y: y0 - (h / 2),
-                        w: x1 - x0,
-                        h: h
-                    };
-                } else if (x1 < x0) {
-                    rect = {
-                        x: x1 - (w / 2), 
-                        y: y0 - (h / 2),
-                        w: x0 - x1,
-                        h: h
-                    };
-                } else if (y1 > y0) {
-                    rect = {
-                        x: x0 - (h / 2),
-                        y: y0 + (h / 2),
-                        w: w,
-                        h: y1 - y0
-                    };
-                } else if (y1 < y0) {
-                    rect = {
-                        x: x0 - (h / 2),
-                        y: y1 - (h / 2),
-                        w: w,
-                        h: y0 - y1
-                    };
-                }
-                context.fillStyle = cycle.style;
+                minX = Math.min(x0, x1);
+                dX = Math.abs(x1 - x0);
+                oX = (x1 > x0) ? 1 : -1;
+                minY = Math.min(y0, y1);
+                dY = Math.abs(y1 - y0);
+                oY = (y1 > y0) ? 1 : -1;
+                rect = {
+                    x: minX + (oX * w / 2),
+                    y: minY + (oY * h / 2),
+                    w: dX || w,
+                    h: dY || h
+                };
                 // test for collisions
                 if (rect.x < 0 || (rect.x + w > width) || rect.y < 0 || (rect.y + h > height)) {
                     collisions.push(cycle);
@@ -183,11 +165,13 @@
                         }
                     }
                 }
+                // draw cycle path
+                context.fillStyle = cycle.style;
                 context.fillRect(
-                    Math.min(x0, x1) - (w / 2), 
-                    Math.min(y0, y1) - (h / 2), 
-                    Math.abs(x1 - x0) + w, 
-                    Math.abs(y1 - y0) + h
+                    minX - (w / 2), 
+                    minY - (h / 2), 
+                    dX + w, 
+                    dY + h
                 );
             }
             if (collisions.length > 0) {
